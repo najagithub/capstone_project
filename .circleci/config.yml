@@ -2,6 +2,16 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
+commands:
+  install_awscli:
+    description: Install aws
+    steps:
+      - run:
+          name: Install aws clie
+          command: | 
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
 jobs:
   build_app_flask:
     docker:
@@ -41,9 +51,29 @@ jobs:
           command: |
             . venv/bin/activate
             make lint
+  push_container:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - install_awscli
+      - run:
+          name: Install Docker
+          command: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+      - run:
+        name: "push to aws"
+        command: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 415235275749.dkr.ecr.us-east-1.amazonaws.com
+          docker build -t capstone .
+          docker tag capstone:latest 415235275749.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+          docker push 415235275749.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
 workflows:
   version: 2
   job_app_flask:
     jobs:
       - build_app_flask
-
+  job_docker_container:
+    jobs:
+      - push_container
