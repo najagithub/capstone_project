@@ -73,6 +73,5 @@ workflows:
   job_app_flask:
     jobs:
       - build_app_flask
-  job_docker_container:
-    jobs:
-      - push_container
+      - push_container:
+          requires: [build_app_flask]
