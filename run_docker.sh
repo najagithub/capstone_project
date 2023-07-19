@@ -10,4 +10,4 @@ docker build --tag=najatrv72/capstone_project .
 docker images list
 # Step 3: 
 # Run flask app
-docker run -p 80:80 najatrv72/capstone_project
+docker run --rm -d -p 80:80 --name capstone_project najatrv72/capstone_project 
