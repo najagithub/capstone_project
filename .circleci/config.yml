@@ -64,10 +64,10 @@ jobs:
       - run:
           name: "push to aws"
           command: |
-            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 415235275749.dkr.ecr.us-east-1.amazonaws.com
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com
             docker build -t capstone .
-            docker tag capstone:latest 415235275749.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
-            docker push 415235275749.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+            docker tag capstone:latest ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+            docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
 workflows:
   version: 2
   job_app_flask:

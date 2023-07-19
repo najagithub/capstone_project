@@ -1,7 +1,7 @@
 FROM python:3.10-alpine
 
 WORKDIR /app
-
+as==
 COPY . app.py /app/
 
 # Install packages from requirements.txt
