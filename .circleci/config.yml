@@ -2,16 +2,7 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
-commands:
-  install_awscli:
-    description: Install aws
-    steps:
-      - run:
-          name: Install aws clie
-          command: | 
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
+
 jobs:
   build_app_flask:
     docker:
@@ -56,7 +47,12 @@ jobs:
       - image: cimg/python:3.10
     steps:
       - checkout
-      - install_awscli
+      - run:
+          name: Install aws cli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Install Docker
           command: |
