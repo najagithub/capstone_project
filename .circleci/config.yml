@@ -68,8 +68,8 @@ jobs:
           command: |
             aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com
             docker build -t capstone .
-            docker tag capstone:latest ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:${CIRCLE_SHA1}
-            docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:${CIRCLE_SHA1}
+            docker tag capstone:latest ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:${CIRCLE_WORKFLOW_ID}
+            docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:${CIRCLE_WORKFLOW_ID}
   test-cluster:
     docker:
       - image: cimg/python:3.10
