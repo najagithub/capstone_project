@@ -84,6 +84,7 @@ jobs:
           command: |
             kubectl get services
             kubectl apply -f infra/eks-sample-deployment.yml
+            kubectl get service/capstone-lb |  awk {'print $1" " $2 " " $4 " " $5'} | column -t
 workflows:
   version: 2
   job_app_flask:
