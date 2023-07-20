@@ -70,24 +70,18 @@ jobs:
             docker build -t capstone .
             docker tag capstone:latest ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
             docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
-  
   test-cluster:
     docker:
       - image: cimg/python:3.10
-    parameters:
-      cluster-name:
-        description: |
-          Name of the EKS cluster
-        type: string
     steps:
       - kubernetes/install:
           kubectl-version: v1.22.0
       - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: << parameters.cluster-name >>
+          cluster-name: "capstone-cluster-prod"
       - run:
+          name: Test cluster
           command: |
             kubectl get services
-          name: Test cluster
 workflows:
   version: 2
   job_app_flask:
@@ -95,7 +89,6 @@ workflows:
       - build_app_flask
       - push_container:
           requires: [build_app_flask]
-      - test-cluster:
-          cluster-name: capstone-cluster-prod
+      - test-cluster
           
       
