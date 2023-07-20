@@ -2,7 +2,9 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
-
+orbs:
+  aws-eks: circleci/aws-eks@2.2.0  # Assurez-vous d'utiliser la dernière version de l'orb AWS EKS
+  aws-ecr: circleci/aws-ecr@x.y.z
 jobs:
   build_app_flask:
     docker:
@@ -68,6 +70,13 @@ jobs:
             docker build -t capstone .
             docker tag capstone:latest ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
             docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+  aws-eks/update-kubeconfig:
+    cluster-name: capstone-cluster-prod
+    install-kubectl: true
+  aws-eks/update-kube-manifests:
+    cluster-name: capstone-cluster-prod
+    kubeconfig: $HOME/.kube/config
+    manifest-glob: "infra/eks-sample-deployment.yml"
 workflows:
   version: 2
   job_app_flask:
@@ -75,3 +84,7 @@ workflows:
       - build_app_flask
       - push_container:
           requires: [build_app_flask]
+      - aws-eks/update-kubeconfig
+      - aws-eks/update-kube-manifests
+
+      
