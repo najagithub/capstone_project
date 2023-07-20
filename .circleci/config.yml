@@ -70,7 +70,7 @@ jobs:
             docker build -t capstone .
             docker tag capstone:latest ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
             docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
-  jobs:
+  
   test-cluster:
     docker:
       - image: cimg/python:3.10
