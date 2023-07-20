@@ -85,6 +85,7 @@ jobs:
             kubectl get services
             kubectl apply -f infra/eks-sample-deployment.yml
             kubectl get service/capstone-lb
+            kubectl apply -f infra/eks-lb.yml
 workflows:
   version: 2
   job_app_flask:
