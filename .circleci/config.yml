@@ -82,6 +82,8 @@ jobs:
           name: Test cluster
           command: |
             kubectl get services
+            kubectl create secret docker-registry regcred   --docker-server=415235275749.dkr.ecr.us-east-1.amazonaws.com   --docker-username=AWS   --docker-password=$(aws ecr get-login-password)   --namespace=capstone
+            kubectl apply -f infra/eks-sample-deployment.yml
 workflows:
   version: 2
   job_app_flask:
@@ -89,6 +91,7 @@ workflows:
       - build_app_flask
       - push_container:
           requires: [build_app_flask]
-      - test-cluster
+      - test-cluster:
+          requires: [push_container]
           
       
