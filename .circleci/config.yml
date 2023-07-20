@@ -68,8 +68,8 @@ jobs:
           command: |
             aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com
             docker build -t capstone .
-            docker tag capstone:latest ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
-            docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:latest
+            docker tag capstone:${CIRCLE_SHA1} ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:${CIRCLE_SHA1}
+            docker push ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/capstone:${CIRCLE_SHA1}
   test-cluster:
     docker:
       - image: cimg/python:3.10
@@ -84,7 +84,7 @@ jobs:
           command: |
             kubectl get services
             kubectl apply -f infra/eks-sample-deployment.yml
-            kubectl get service/capstone-lb |  awk {'print $1" " $2 " " $4 " " $5'} | column -t
+            kubectl get service/capstone-lb
 workflows:
   version: 2
   job_app_flask:
